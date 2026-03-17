@@ -1,0 +1,21 @@
+services:
+  claude-swarm:
+    build: .
+    stdin_open: true
+    tty: true
+    environment:
+      - CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=true
+      - CLAUDE_CODE_SPAWN_BACKEND=tmux
+      - ENABLE_FIREWALL=false
+    volumes:
+      # Mount caller's current directory as the workspace
+      - ${SWARM_WORKSPACE}:/workspace
+      # Auth
+      - ${HOME}/.claude/.credentials.json:/home/claude/.claude/.credentials.json:ro
+      - ${HOME}/.claude/settings.json:/home/claude/.claude/settings.json:ro
+      # Persist runtime data
+      - claude-data:/home/claude/.local/share/claude
+    mem_limit: 8g
+
+volumes:
+  claude-data:
